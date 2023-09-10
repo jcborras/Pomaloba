@@ -1,0 +1,3 @@
+- Apply them
+- Monitor mode: query the api-server for NodePorts with a certain
+  selector
