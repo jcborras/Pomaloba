@@ -29,12 +29,15 @@ func check(e error) {
 
 // Returns the iptables statement that realize a Load Balancing specification
 func IpTablesOutputFor(cfg Configuration) string {
-	tplt := "iptables" +
-		" --table nat --append PREROUTING" +
+	var chainName string = fmt.Sprintf("%s_NAT_CHAIN", cfg.App)
+	outStr := fmt.Sprintf("iptables --table nat --new-chain %s\n", chainName)
+	outStr += fmt.Sprintf("iptables --table nat --append PREROUTING --jump %s\n",
+		chainName)
+		tplt := "iptables" +
+		" --table nat --append " + chainName + " " +
 		" --protocol tcp --destination %s --dport %d" +
 		" --match statistic --mode random --probability %.5f" +
 		" --jump DNAT --to-destination %s:%d\n"
-	outStr := ""
 	for _, ep := range cfg.Endpoints {
 		for j, dst := range cfg.Destinations {
 			p := 1.0 / float32(len(cfg.Destinations)-j)
@@ -42,6 +45,11 @@ func IpTablesOutputFor(cfg Configuration) string {
 		}
 	}
 	return outStr
+}
+
+func IpTablesRulesOutputFor(cfg Configuration) string {
+	// TODO
+	return "TODO\n"
 }
 
 // Returns an Ansible playbook that realizes a LB specification
@@ -60,11 +68,13 @@ func outputFormsMap() map[string](func(Configuration) string) {
 	return map[string](func(Configuration) string){
 		"ansible": AnsibleOutputFor,
 		"iptables": IpTablesOutputFor,
+		"iptables-rules": IpTablesRulesOutputFor,
 	}
 }
 
 // Returns the function that generates the output from the output type
 func ChooseOutputForm(form string) func(Configuration) string {
+	// I went here all fancy functional but a switch stmtn can do the trick too
 	if f, found := outputFormsMap()[form]; !found {
 		panic(fmt.Sprintf("Key '%s' not found", form))
 	} else {
@@ -78,7 +88,7 @@ func getWorkToDoFromCmdline() (*string, *string) {
 	help := flag.Bool("help", false, "Show help")
 	inSpec := flag.String("input-spec", "", "Input Load Balancer spec (JSON)")
 	outputType := flag.String("output-type", "iptables",
-	"One of: ansible|iptables|iptables-rules (pending)|iptables-run (pending)..")
+	"One of: ansible|iptables|iptables-rules|iptables-run (pending)..")
 
 	flag.Parse()
 

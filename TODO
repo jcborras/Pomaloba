@@ -1,3 +1,5 @@
 - Apply them
 - Monitor mode: query the api-server for NodePorts with a certain
   selector
+- Add output format iptables-rules
+- Add option to delete chain and jump entry (beware! it is index based)
