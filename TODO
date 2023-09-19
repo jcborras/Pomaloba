@@ -1,5 +1,12 @@
-- Apply them
-- Monitor mode: query the api-server for NodePorts with a certain
+* Ansible
+  - generate output for setting up the rules
+  - generate deletion code for cleaning up the rules
+* iptables:
+  - add output format iptables-rules
+  - add deletion format for iptables-rules
+* nftables:
+  - Add output format nftables
+  - Add deletion format nftables
+  - Add output format nftables-rules? Is there an equivalent?
+* Monitor mode: query the api-server for NodePorts with a certain
   selector
-- Add output format iptables-rules
-- Add option to delete chain and jump entry (beware! it is index based)

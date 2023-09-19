@@ -32,14 +32,17 @@ running in your own desktop (or laptop these days).
 
 Everything is fine until you deploy a workload consisting in several
 replicas and want to add a Load Balancer to the mix: A Service of type
-`Load Balancer` won't deploy. What do you do now?`
+`Load Balancer` won't deploy. What do you do now?
 
 Well you could use Services of type `NodePort` ensuring the traffic
 will arrive to its destination once you reach the worker nodes but you
-still want to have a single endpoint to reach your application. Then
-provision a small VM instance with Linux NetFilter enabled and use
-Pomaloba to generate the necesary NAT rules to make it happen.
+still want to have a single (IP address, port) endpoint to reach your application.
 
-For the time being it uses `iptables` but supporting `nftables` should
-not be so complicated once I wrap my head around it.
+Thus this Poor Man's Load Balancer exists: just provision a small VM
+instance with Linux NetFilter enabled and use the Pomaloba output o
+generate the necesary DNAT and Masquerading actions to make it happen.
+
+For the time being it generates output suitable to be used by
+`iptables` but supporting `nftables` and Ansible should not be too
+complicated once I wrap my head around it.
 
