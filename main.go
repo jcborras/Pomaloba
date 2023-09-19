@@ -167,6 +167,15 @@ func IpTablesRulesOutputFor(cfg Configuration) string {
 
 // Returns an Ansible playbook that realizes a LB specification
 func AnsibleOutputFor(cfg Configuration) string {
+	// Create new DNAT custom chain in table nat
+	// https://docs.ansible.com/ansible/latest/collections/ansible/builtin/iptables_module.html
+	// chain_management
+	// Add rules to new DNAT chain
+	// Append chain to builtin PREROUTING chain
+	// Create new MASQ custom chain in table nat
+	// Add rules to new MASQ chain
+	// Append chain to builtin POSTROUTING chain
+	
 	tplt := "- name: This is a test, there are other tests like it, but..\n" +
 		"  ansible.builtin.iptables:\n" +
 		"  chain: FOO\n" +
@@ -221,7 +230,8 @@ func getWorkToDoFromCmdline() (*string, *string, *bool) {
 	inSpec := flag.String("input-spec", "", inSpecHelpStr)
 
 	outputTypeHelpStr := "Format of the result. Accepted values are:\n"
-	outputTypeHelpStr += "ansible | iptables | iptables-rules | nftables | nftables-rules"
+	outputTypeHelpStr += "iptables | iptables-ansible | iptables-rules | "
+	outputTypeHelpStr += "nftables | nftables-ansible | nftables-ansible"
 	outputType := flag.String("output-type", "iptables", outputTypeHelpStr)
 
 

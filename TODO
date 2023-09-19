@@ -1,9 +1,6 @@
 * Ansible
   - generate output for setting up the rules
   - generate deletion code for cleaning up the rules
-* iptables:
-  - add output format iptables-rules
-  - add deletion format for iptables-rules
 * nftables:
   - Add output format nftables
   - Add deletion format nftables
